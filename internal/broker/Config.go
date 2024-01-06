@@ -1,4 +1,4 @@
-package internal
+package broker
 
 import "gopkg.in/yaml.v2"
 import "os"

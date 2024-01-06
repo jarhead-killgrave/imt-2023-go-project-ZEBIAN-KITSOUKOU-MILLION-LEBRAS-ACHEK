@@ -1,11 +1,10 @@
 package storage
 
+import "imt-atlantique.project.group.fr/meteo-airport/internal/sensor"
+
 type Recorder interface {
 	// Record stores a measurement
-	Record(m *Measurement) error
-
-	// Initialize initializes resources for recording
-	Initialize() error
+	Record(m *sensor.Measurement) error
 
 	// Close closes the recorder
 	Close() error

@@ -27,22 +27,30 @@ func main() {
 		if csvRecorder, err := storage.NewCSVRecorder("test.csv", csvSettings); err != nil {
 			panic(err)
 		} else {
-			manager.AddRecorder(sensor.Temperature, csvRecorder)
+			manager.AddRecorder(sensor.Temperature, csvRecorder, 1)
 		}
 
-		manager.Start()
-		defer func(manager *storage.Manager) {
-			err := manager.Close()
-			if err != nil {
-				panic(err)
-			}
-		}(manager)
+		if influxRecorder, err := storage.NewInfluxDBRecorder(
+			storage.InfluxDBSettings{
+				URL:          "http://localhost:8086",
+				Token:        "oovEfiXEVMcbEFEmy9jNNKUnWvlBexVmvSH6Ohr8f5b201RHNx5nb4D_5Y4o6mhwUWx--sV018H0ZLf6zDaD8Q==",
+				Bucket:       "metrics",
+				Organization: "meteo-airport",
+			}); err != nil {
+			panic(err)
+		} else {
+			manager.AddRecorder(sensor.Temperature, influxRecorder, 1)
+		}
+
+		if err := manager.Start(); err != nil {
+			panic(err)
+		}
 
 		measurement := sensor.Measurement{
 			SensorID:  1,
 			AirportID: "NTE",
 			Type:      sensor.Temperature,
-			Value:     20.0,
+			Value:     40.0,
 			Unit:      "°C",
 			Timestamp: time.Now(),
 		}
